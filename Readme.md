@@ -155,7 +155,10 @@ Implementado nos recursos do server.
 ## Frontend
 Para o frontend foram empregas as biblíotecas BULMA, Axios, react-router-dom e qs.
 
-* bulma: para estilização da nossa pagína, formulário e tabela. 
+* Bulma: para estilização da nossa pagína, formulário e tabela. 
+* Axios: 
+* reac-router-dom: 
+* qs: 
 
 
 ```Código
@@ -172,4 +175,184 @@ root.render(
   </React.StrictMode>
 );
 ```
+Estelização e importação react
+
+```Código
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import CarList from "./components/CarList";
+import AddCar from './components/AddCar';
+
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<CarList/>}/>
+        <Route path='add' element={<AddCar/>}/>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+```
+Importação das rotas utilizadas na aplicação.
+
+```Código
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
+import { Link } from 'react-router-dom';
+
+const CarList = () => {
+    const [cars, setCar] =  useState([]);
+    useEffect(() =>{
+        
+        getCars();
+    }, [])
+
+    const getCars = async () => {
+        const response = await axios.get('http://localhost:5000/carros');
+        console.log(response);
+        setCar(response.data);
+    }
+
+    const deleteCar = async (id) => {
+
+        
+        try {
+            axios({
+                method: 'DELETE',
+                url: "http://localhost:5000/carros/12",
+                headers: { 'Content-Type': 'application/json' },
+              });
+              
+            getCars();
+        } catch (error) {
+            console.log(id);
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
+
+  return (
+    <div className="columns mt-5 is-centered">
+        <div className="column is-half">
+            <Link to="add" className='button is-success'>Cadastrar Carro</Link>
+            <table className='table is-striped is-fullwidth'>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Serie</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Ano</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {cars.map((cars, i) =>(
+                                        <tr key={cars.id} >
+                                            <td>{i+1}</td>
+                                            <td>{cars.Serie}</td>
+                                            <td>{cars.Marca}</td>
+                                            <td>{cars.Modelo}</td>
+                                            <td>{cars.createdAt}</td>
+                                            <td><button onClick={(e) => deleteCar(cars.id, e)} className='button is-small is-danger'>Deletar</button></td>
+                                        </tr>
+
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  )
+}
+
+export default CarList
+```
+Função responsável pela listagem dos dados vindos do backend, observe que ` <Link to="add" className='button is-success'>Cadastrar Carro</Link>` faz referência a tela de registro de veículos.
+```
+import React, { useState } from 'react'
+import axios from 'axios'
+import qs from 'qs';
+import { useNavigate } from 'react-router-dom';
+
+const AddCar = () => {
+    // essas tuas variaveis se tornaram sem sentido, poir agora voce nao usa mais elas, voce ta usando os forms com name="" na class
+    const navigate = useNavigate();
+
+    const saveCar = async (e) => {
+        e.preventDefault();
+
+        // cria um novo objeto do tipo FormData a partir do evento submit do formulario
+        const formData = new FormData(e.target);
+        // depois pega todos as ENTRIES (valores) do formulario e coloca numa variavel chamada formProps
+        const formProps = Object.fromEntries(formData);
+
+
+        try {
+            const options = {
+                method: 'POST',
+                // o nome do header que suporta o padrao de url Model=aa&Ano=2001 é esse aquim xx-form-url....
+                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                // a variavel formProps voce passa como dado, mas usando o conversor qa.stringify pra ele gerar aquele padrao
+                data: qs.stringify(formProps),
+                url: "http://localhost:5000/carros",
+              };
+
+              await axios(options);
+
+            navigate("/");
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    }
+
+    return (
+        <div className="columns mt5 is-centered">
+            <div className="column is-half">
+                <form onSubmit={saveCar}>
+                    <div className='field'>
+                        <label className="label">Serie</label>
+                        <div className='control'>
+                            <input type="text" name="Serie" className="input" placeholder='Serie' />
+                        </div>
+                    </div>
+
+                    <div className='field'>
+                        <label className="label">Marca</label>
+                        <div className='control'>
+                            <input type="text" name="Marca" className="input"  placeholder='Marca' />
+                        </div>
+                    </div>
+
+                    <div className='field'>
+                        <label className="label">Modelo</label>
+                        <div className='control'>
+                            <input type="text" name="Modelo" className="input" placeholder='Modelo' />
+                        </div>
+                    </div>
+
+                    <div className='field'>
+                        <label className="label">Ano</label>
+                        <div className='control'>
+                            <input type="text" name="Ano" className="input"  placeholder='Ano' />
+                        </div>
+                    </div>
+                    <div className='field'>
+                        <button type="submit" className="button is-success">Salvar</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
+
+export default AddCar;
+```
+Tela de registro e envio de dados via fomulário doc.
+
+
 
