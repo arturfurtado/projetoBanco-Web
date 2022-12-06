@@ -115,7 +115,7 @@ export const deleteCarro = async (req, res) => {
     };
 };
 ```
-Funções de transfamação dos dados no banco.
+Funções de transformação dos dados no banco.
 
 
 ## Contributing
