@@ -8,25 +8,115 @@ Implementação de um sistema de read e insert utilizando as tecnologias React j
 
 Para trabalhar com o mysql no backend, foi utilizado a biblioteca [Sequelize](https://sequelize.org/api/v6/identifiers), no qual se trata de uma tecnologia Node.js (para integração SQL), para Oracle, Postgres, MySQL, MariaDB, SQLite e SQL Server e muito mais. Com suporte a transações sólidas, relações, carregamento rápido e lento, replicação de leitura e muito mais.
 
+## Implementação
 
-```bash
-pip install foobar
+```Código
+import { Sequelize } from "sequelize";
+
+const db =  new Sequelize('projeto', 'root','', {
+    host: 'localhost',
+    password:'root',
+    dialect: 'mysql'
+})
+
+export default db;
 ```
+Configuração de conexão
 
-## Usage
-
-```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+```Código
+import { Sequelize } from "sequelize";
+import db from "../config/database.js";
+     
+const { DataTypes } = Sequelize;
+     
+const modelCar = db.define('carros',{
+        Serie:{
+            type: DataTypes.STRING 
+        },
+        Marca:{
+            type: DataTypes.STRING
+        },
+        Modelo:{
+            type: DataTypes.STRING
+        },
+        createdAt:{
+            type: DataTypes.DATE
+        }
+    },{
+        freezeTableName: true
+     });
+     
+export default modelCar;
 ```
+Configuração do padrão de retorno das consultas.
+
+```Código
+import modelCar from "../models/carModel.js";   
+
+export const getAllCars = async (req,res) => {
+
+    try{
+        const carros = await modelCar.findAll();
+        res.json(carros);
+    } catch(err){
+        res.json({message: err.message});
+    }
+    
+};
+
+export const getCarrId = async (req, res) => {
+    try{
+        const carros = await modelCar.findAll({
+            where: {id: req.params.id}
+        });
+        res.json(carros[0]);
+    }catch(err){
+        res.json({message: err.message});
+    }
+};
+
+export const createCarro = async (req, res) => {
+    try{
+        //console.log(req.body); // USE ESSE CONSOLE PARA SABER SE TA CHEGANDO VALORES (nao esquece de reiniciar o backend a cada salvar)
+        await modelCar.create(req.body); 
+         res.json({
+             "Mensagem": "Produto criado"
+         });
+    }catch(err){
+        res.json({message: err.message});
+    }
+};
+
+export const updateCarro = async (req, res) => {
+    try {
+        await modelCar.update(req.body, {
+            where : {
+                id: req.params.id
+            }
+        });
+        res.json({
+            "message": "Product Updated"});
+        } catch (error) {
+        res.json({ message: error.message });}
+};
+
+export const deleteCarro = async (req, res) => {
+    try {
+        await modelCar.destroy({
+            where: {
+                id: req.params.id
+            }
+        });
+        res.json({
+            "message": "Carro deletado"
+        });
+    }catch (error) {
+        res.json({message : error.message});
+    };
+};
+```
+Funções de transfamação dos dados no banco.
+
 
 ## Contributing
 
