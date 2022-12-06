@@ -156,9 +156,9 @@ Implementado nos recursos do server.
 Para o frontend foram empregas as biblíotecas BULMA, Axios, react-router-dom e qs.
 
 * Bulma: para estilização da nossa pagína, formulário e tabela. 
-* Axios: 
-* reac-router-dom: 
-* qs: 
+* Axios:Responsável pelas requisições do front para o back 
+* react-router-dom: biblioteca integrada ao react que fornece recursos para elementos html
+* qs: Utilizada para conversão de dados em formato String.
 
 
 ```Código
