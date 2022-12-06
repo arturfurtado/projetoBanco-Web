@@ -8,7 +8,9 @@ Implementação de um sistema de read e insert utilizando as tecnologias React j
 
 Para trabalhar com o mysql no backend, foi utilizado a biblioteca [Sequelize](https://sequelize.org/api/v6/identifiers), no qual se trata de uma tecnologia Node.js (para integração SQL), para Oracle, Postgres, MySQL, MariaDB, SQLite e SQL Server e muito mais. Com suporte a transações sólidas, relações, carregamento rápido e lento, replicação de leitura e muito mais.
 
-## Implementação
+Na parte de comunicação entre as rotas, foi usado a biblioteca cors, no qual serve como um mecanismo utilizado pelos navegadores para compartilhar recursos entre diferentes origens.
+
+## Implementação - Sequileze
 
 ```Código
 import { Sequelize } from "sequelize";
@@ -117,14 +119,34 @@ export const deleteCarro = async (req, res) => {
 ```
 Funções de transformação dos dados no banco.
 
+## Implementação - Cors
 
-## Contributing
+```Código
+import express from 'express';
+import db from './config/database.js';
+import carRoutes from './routes/routes.js';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+const port = 5000;
+const app = express();
 
-Please make sure to update tests as appropriate.
+try {
+    await db.authenticate();
+    console.log('Conexão feita com sucesso');
+} catch (err) {
+    console.error(err);
+}
 
-## License
+app.use(cors());
+app.use(express.json());
 
-[MIT](https://choosealicense.com/licenses/mit/)
+app.use(bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+
+app.use('/carros',carRoutes);
+
+app.listen(port, () => console.log('Servidor rodando'));
+```
