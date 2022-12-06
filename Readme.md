@@ -153,3 +153,23 @@ app.listen(port, () => console.log('Servidor rodando'));
 Implementado nos recursos do server.
 
 ## Frontend
+Para o frontend foram empregas as biblíotecas BULMA, Axios, react-router-dom e qs.
+
+* bulma: para estilização da nossa pagína, formulário e tabela. 
+
+
+```Código
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import "bulma/css/bulma.css";
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
