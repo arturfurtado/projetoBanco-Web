@@ -1,3 +1,5 @@
+Link do video requisitado pelo professor: https://youtu.be/HC-hUTlaHY0
+
 # Projeto Banco de dados - Tela para cadastro de veiculos
 
 Implementação de um sistema de read e insert utilizando as tecnologias React js, para construção do frontend, Node js para conexão com a base e banco de dados MYSQL, ao qual utizamos para criar, guardar, inserir e listar os nossos dados, bem como construir a base de alimentação do backend.
@@ -156,9 +158,9 @@ Implementado nos recursos do server.
 Para o frontend foram empregas as biblíotecas BULMA, Axios, react-router-dom e qs.
 
 * Bulma: para estilização da nossa pagína, formulário e tabela. 
-* Axios:Responsável pelas requisições do front para o back 
-* react-router-dom: biblioteca integrada ao react que fornece recursos para elementos html
-* qs: Utilizada para conversão de dados em formato String.
+* Axios: 
+* reac-router-dom: 
+* qs: 
 
 
 ```Código
